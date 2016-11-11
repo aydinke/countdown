@@ -1,0 +1,163 @@
+<html lang="en" title="js one hour escape countdown">
+
+<head><title>countdown</title></head>
+
+<script type="text/javascript">
+
+// Written by Aydin Kurt-Elli
+// 11.11.2016
+
+// Simple Webpage and Javascript counter for use in one hour escape game
+// Can be streamed via Google Chrome / Chromecast to allow push of audio etc to remote screen
+
+// If for other uses, simply edit the variables timerStart / timer
+
+// Note, hidden "buttons" below the countdown clock graphic
+// First button is a pause
+// Second is a reset
+
+// For the last 5 mins, the screen flashes red/black
+// Stops at zero
+
+
+
+
+// var defs
+
+var pauseStatus = true;
+var stringMins = stringSecs = "00";
+var timerStart = timer = 3600;
+var mins = secs = 0;
+var bg = bg_status = "black";
+
+// reset timer to 1 hr in secs
+function resetTimer() {
+	if (timer <= 300) clearInterval(redScreen);
+	bg = document.body.style.backgroundColor = "#000000";
+	bg_status = "black";
+	timer = timerStart;
+}
+
+//pause button
+function pauseButton() {
+	if (pauseStatus == true) {
+		countdownTimer = setInterval( function() { Countdown(); }, 1000 );
+		pauseStatus = false;
+	} else {
+		clearInterval(countdownTimer);
+		pauseStatus = true;
+	}
+}
+
+//start timer
+function startTimer() {
+	countdownTimer = setInterval( function() { Countdown(); }, 1000 );
+	pauseStatus = false;
+}
+
+
+//start final 5 mins flashing...
+function blinkRed() {
+	redScreen = setInterval( function() {
+		if (bg == "#cc0000") {
+			bg = document.body.style.backgroundColor = "#000000";
+		} else {
+			bg = document.body.style.backgroundColor = "#cc0000";
+		}
+	} , 600);
+}
+
+
+// set images based on timer status
+function Countdown() {
+
+	//if in last 5 mins, start flashing screen
+	if ((timer <= 300) && bg_status == "black") {
+		blinkRed();
+		bg_status = "blink";
+	}
+
+	if (timer == 0) clearInterval(countdownTimer);
+
+	if (timer >= 60) {
+		mins = Math.floor(timer/60);
+		secs = timer - (mins * 60);
+	} else {
+		mins = 0;
+		secs = timer;
+	}
+
+	if (mins >= 10) {
+		stringMins = mins.toString();
+	} else {
+		stringMins = "0" + mins.toString();
+	}
+
+	if (secs >= 10) {
+		stringSecs = secs.toString();
+	} else {
+		stringSecs = "0" + secs.toString();
+	}
+
+	//set divider graphic if at start of coundown
+	if (timer == timerStart) document.getElementById("divider").src = "images/divider.png";
+
+	//update  all mins and secs counter graphics
+	document.getElementById("mins_tens").src = "images/" + stringMins.charAt(0) + ".png";
+	document.getElementById("mins").src = "images/" + stringMins.charAt(1) + ".png";
+	document.getElementById("secs_tens").src = "images/" + stringSecs.charAt(0) + ".png";
+	document.getElementById("secs").src = "images/" + stringSecs.charAt(1) + ".png";
+
+	this.timer--;
+}
+
+
+startTimer();
+
+
+</script>
+
+<body bgcolor="black">
+
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+<center>
+
+<p id="demo"></p>
+
+<pre>
+<img src="images/blank_num.png" id="mins_tens"> <img src="images/blank_num.png" id="mins"> <img src="images/blank_divider.png" id="divider"> <img src="images/blank_num.png" id="secs_tens"> <img src="images/blank_num.png" id="secs">
+
+
+
+</pre>
+
+<a href="#"><img src="images/blank.png" name="pause" onclick="pauseButton();"></a><br>
+<br>
+<a href="#"><img src="images/blank.png" name="reset" onclick="resetTimer();"></a>
+</center>
+
+
+
+</body>
+
+</html>
